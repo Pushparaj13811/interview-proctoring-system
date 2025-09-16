@@ -1,0 +1,13 @@
+{
+  "sessionId": "test-session",
+  "uploadId": "278fa2b4ac05f104500d91ef54bc9649",
+  "totalChunks": 5,
+  "chunkSize": 1048576,
+  "totalSize": 5242880,
+  "uploadedChunks": [],
+  "chunkHashes": [],
+  "startTime": "2025-09-16T18:55:48.740Z",
+  "lastActivity": "2025-09-16T18:55:48.740Z",
+  "isComplete": false,
+  "resumeToken": "9e7881b7af3864a95a7f9193e072b9713b9a52e51e5f6538c4a75e0ffe04b1b3"
+}

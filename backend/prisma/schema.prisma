@@ -13,3 +13,72 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Candidate {
+  id        String    @id @default(cuid())
+  name      String
+  email     String?   @unique
+  sessions  Session[]
+  createdAt DateTime  @default(now())
+
+  @@index([name])
+  @@index([createdAt])
+}
+
+model Session {
+  id             String    @id @default(cuid())
+  candidateId    String
+  candidate      Candidate @relation(fields: [candidateId], references: [id])
+  startTime      DateTime  @default(now())
+  endTime        DateTime?
+  duration       Int?
+  videoUrl       String?
+  integrityScore Int?
+  events         Event[]
+  reports        Report[]
+
+  createdAt DateTime @default(now())
+
+  @@index([candidateId])
+  @@index([startTime])
+  @@index([integrityScore])
+}
+
+model Event {
+  id         String    @id @default(cuid())
+  type       EventType
+  timestamp  DateTime  @default(now())
+  duration   Int?
+  label      String?
+  confidence Float?
+  meta       Json?
+
+  session   Session @relation(fields: [sessionId], references: [id])
+  sessionId String
+
+  @@index([sessionId, timestamp])
+  @@index([type])
+  @@index([label])
+}
+
+model Report {
+  id          String   @id @default(cuid())
+  format      String
+  fileUrl     String
+  generatedAt DateTime @default(now())
+
+  session   Session @relation(fields: [sessionId], references: [id])
+  sessionId String
+
+  @@index([sessionId])
+  @@index([generatedAt])
+}
+
+enum EventType {
+  LOOKING_AWAY
+  NO_FACE
+  MULTIPLE_FACES
+  OBJECT_DETECTED
+  EYE_CLOSED
+  AUDIO_SUSPICIOUS
+}
