@@ -2,6 +2,8 @@ import express, { type Application, type Request, type Response, type NextFuncti
 import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
+import prisma from "./Config/db";
+
 import AppError from "./Utils/appError";
 import ApiResponse from "./Utils/apiResponse";
 
@@ -13,6 +15,7 @@ class App {
         this.initializeMiddlewares();
         this.initializeRoutes();
         this.initializeErrorHandling();
+        this.initializePrisma();
     }
 
     private initializeMiddlewares(): void {
@@ -44,6 +47,16 @@ class App {
                 res.status(statusCode).json(ApiResponse.error(message));
             }
         );
+    }
+
+    private async initializePrisma(): Promise<void> {
+        try {
+            await prisma.$connect();
+            console.log("Prisma connected to database");
+        } catch (error) {
+            console.error("Failed to connect Prisma:", error);
+            process.exit(1);
+        }
     }
 }
 
